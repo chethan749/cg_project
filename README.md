@@ -2,7 +2,6 @@
 Simple version of Snake Game using OpenGL
 
 ## Usage
----
 * Clone the repository
 * Make snake.sh executable by using command: 'chmod +x snake.sh'
 * Run the 'snake.sh' script using command: './snake.sh'
