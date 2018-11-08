@@ -6,7 +6,7 @@ using namespace std;
 #define GRID_SIZE 40
 #define CELL_SIZE 20
 #define INITIAL_SNAKE_LENGTH 4
-#define TIMEOUT 200
+#define TIMEOUT 100
 
 class Snake
 {

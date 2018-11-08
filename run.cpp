@@ -3,6 +3,7 @@
 using namespace std;
 
 int window;
+list<pair<int, int>> velocityBuffer;
 int delay = TIMEOUT;
 void * font = GLUT_BITMAP_TIMES_ROMAN_24;
 
@@ -51,26 +52,39 @@ void updateVelocities(int key, int x, int y)
 {
     if(snake_obj.getDead())
         return;
+
+    int velX, velY;
+
     switch (key) {
         case GLUT_KEY_UP:
-            snake_obj.updateVelocities(0, 1);
+            velX = 0;
+            velY = 1;
             break;
         case GLUT_KEY_DOWN:
-            snake_obj.updateVelocities(0, -1);
+            velX = 0;
+            velY = -1;
             break;
         case GLUT_KEY_RIGHT:
-            snake_obj.updateVelocities(1, 0);
+            velX = 1;
+            velY = 0;
             break;
         case GLUT_KEY_LEFT:
-            snake_obj.updateVelocities(-1, 0);
+            velX = -1;
+            velY = 0;
             break;
     }
+    velocityBuffer.push_back(make_pair(velX, velY));
 }
 
 void handleMovement(int value)
 {
     glutTimerFunc(delay, handleMovement, 0);
     snake_obj.updateSnake();
+    if(!velocityBuffer.empty())
+    {
+        snake_obj.updateVelocities(velocityBuffer.front().first, velocityBuffer.front().second);
+        velocityBuffer.pop_front();
+    }
     glutPostRedisplay();
 }
 

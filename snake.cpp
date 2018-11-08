@@ -73,7 +73,7 @@ void Snake::death()
 
 void Snake::updateSnake()
 {
-    if(snake[0].first == GRID_SIZE - 1 && velX == 1 || snake[0].first == 0 && velX == -1 || snake[0].second == GRID_SIZE - 1 && velY == 1 || snake[0].second == 0 && velY == -1)
+    if(snake[0].first == GRID_SIZE - 1 || snake[0].first == 0 || snake[0].second == GRID_SIZE - 1 || snake[0].second == 0)
     {
         if(lives--)
         {
