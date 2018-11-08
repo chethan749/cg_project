@@ -10,6 +10,7 @@ using namespace std;
 
 int window;
 int delay = TIMEOUT;
+list<pair<int, int>> velocityBuffer;
 int velX, velY, fruitX, fruitY, score = 0, lives = 3;
 bool eaten = true, dead = false;
 vector<pair <int, int>> snake;
@@ -40,10 +41,8 @@ void menu(int value)
         case 1:
         {
             snake.clear();
-            snake.push_back(make_pair(GRID_SIZE / 2, GRID_SIZE / 2));
-            snake.push_back(make_pair(GRID_SIZE / 2 - 1, GRID_SIZE / 2));
-            snake.push_back(make_pair(GRID_SIZE / 2 - 2, GRID_SIZE / 2));
-            snake.push_back(make_pair(GRID_SIZE / 2 - 3, GRID_SIZE / 2));
+            for(int i = 0; i < INITIAL_SNAKE_LENGTH; i++)
+                snake.push_back(make_pair(GRID_SIZE / 2 - i, GRID_SIZE / 2));
 
             velX = 1;
             velY = 0;
@@ -115,7 +114,7 @@ void death()
 
 void updateSnake()
 {
-    if(snake[0].first == GRID_SIZE - 1 && velX == 1 || snake[0].first == 0 && velX == -1 || snake[0].second == GRID_SIZE - 1 && velY == 1 || snake[0].second == 0 && velY == -1)
+    if(snake[0].first == GRID_SIZE - 1 || snake[0].first == 0 || snake[0].second == GRID_SIZE - 1 || snake[0].second == 0)
     {
         if(lives--)
         {
@@ -182,42 +181,38 @@ void updateVelocities(int key, int x, int y)
 {
     if(dead)
         return;
+    int velX, velY;
     switch (key) {
         case GLUT_KEY_UP:
-            if(velY != -1)
-            {
-                velX = 0;
-                velY = 1;
-            }
+            velX = 0;
+            velY = 1;
             break;
         case GLUT_KEY_DOWN:
-            if(velY != 1)
-            {
-                velX = 0;
-                velY = -1;
-            }
+            velX = 0;
+            velY = -1;
             break;
         case GLUT_KEY_RIGHT:
-            if(velX != -1)
-            {
-                velX = 1;
-                velY = 0;
-            }
+            velX = 1;
+            velY = 0;
             break;
         case GLUT_KEY_LEFT:
-            if(velX != 1)
-            {
-                velX = -1;
-                velY = 0;
-            }
+            velX = -1;
+            velY = 0;
             break;
     }
+    velocityBuffer.push_back(make_pair(velX, velY));
 }
 
 void handleMovement(int value)
 {
     glutTimerFunc(delay, handleMovement, 0);
     updateSnake();
+    if(!velocityBuffer.empty())
+    {
+        velX = velocityBuffer.front().first;
+        velY = velocityBuffer.front().second;
+        velocityBuffer.pop_front();
+    }
     glutPostRedisplay();
 }
 
